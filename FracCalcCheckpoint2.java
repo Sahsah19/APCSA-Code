@@ -3,13 +3,13 @@ import java.util.Scanner;
    Frac Calc - Write a program to act
    as a calculator using everything from
    chapters 1 - 5 */
-public class FracCalc{
+public class FracCalcCheckpoint2{
    public static void main(String[] args){
       Scanner scan = new Scanner(System.in);
       String condition = "y";
       String expression = "";
       String output = "";
-      System.out.println("Welcome to Sahil's FracCalc!");
+      System.out.println("Welcome to Sahil's FracCalc!\nType \"quit\" anytime to exit.");
       System.out.print("Enter an expression: ");
       expression = scan.nextLine();
 
@@ -19,7 +19,10 @@ public class FracCalc{
             runTests();
          }
          else{
-            System.out.println(produceAnswer(expression));
+            String[] arrayNumbers = produceAnswer(expression);
+            System.out.println("Whole: " + arrayNumbers[0]);
+            System.out.println("Numerator: " + arrayNumbers[1]);
+            System.out.println("Denominator: " + arrayNumber[2]);
             System.out.print("Expression evaluated, ");
          }
          System.out.print("enter another expression: ");
@@ -28,7 +31,7 @@ public class FracCalc{
       System.out.print("Thank you for using Sahil's FracCalc! Have a good day!");
    }
    
-   public static String produceAnswer(String input){
+   public static String[] produceAnswer(String input){
       String operator = input.substring(input.indexOf(" ") + 1, input.indexOf(" ") + 2);
       String secondOperand = findSecondOperand(input);
       String firstOperand = findFirstOperand(input);
@@ -36,10 +39,7 @@ public class FracCalc{
       String[] firstArray = partsOfOperand(firstOperand);
       String[] secondArray = partsOfOperand(secondOperand);
       
-      System.out.println("Whole: " + secondArray[0]);
-      System.out.println("Numerator: " + secondArray[1]);
-      System.out.println("Denominator: " + secondArray[2]);
-      return secondOperand;      
+      return secondArray;      
    }
    
    public static String findFirstOperand(String input){
@@ -83,19 +83,10 @@ public class FracCalc{
    
    public static void runTests(){
       String[] inputs = {"10/4 + 3/2", "2 + 11", "1_3/4 * 4_5/6", "1/2 / -4/5", "1/0 - 2", "1 -- 4"};
-      String[] expectedOutput = {"3/2", "11", "4_5/6", "-4/5", "2", "4"};
+      String[][] expectedOutput = {"3/2", "11", "4_5/6", "-4/5", "2", "4"};
       for(int i = 0; i < inputs.length; i++){
-         String test = produceAnswer(inputs[i]);
-         if(test.equals(expectedOutput[i])){
-            System.out.println("Test Passed!");
-         }
-         else{
-            System.out.println("Test Failed :(");
-            System.out.println("Input: " + inputs[i]);
-            System.out.println("Expected: " + expectedOutput[i]);
-            System.out.println("Output: " + test);
-         }
-      } 
-      System.out.print("Testing Complete, ");    
+         String[] testArray = produceAnswer(inputs[i]);
+         
+      }    
    }
 }
