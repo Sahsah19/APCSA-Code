@@ -9,22 +9,15 @@ public class FracCalcCheckpoint1{
       String condition = "y";
       String expression = "";
       String output = "";
-      System.out.println("Welcome to Sahil's FracCalc!");
       System.out.print("Enter an expression: ");
       expression = scan.nextLine();
 
-      
-      while(!expression.equalsIgnoreCase("quit")){         
-         if(expression.equalsIgnoreCase("test")){
-            runTests();
-         }
-         else{
-            System.out.println(produceAnswer(expression));
-         }
-         System.out.print("enter another expression: ");
-         expression = scan.nextLine();
+      if(expression.equalsIgnoreCase("test")){
+         runTests();
       }
-      System.out.print("Thank you for using Sahil's FracCalc! Have a good day!");
+      else{
+         System.out.print(produceAnswer(expression));
+      }
    }
    
    public static String produceAnswer(String input){
@@ -52,6 +45,6 @@ public class FracCalcCheckpoint1{
             System.out.println("Output: " + test);
          }
       } 
-      System.out.print("Testing Complete, ");    
+      System.out.print("Testing Complete");    
    }
 }

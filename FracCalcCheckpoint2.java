@@ -19,10 +19,7 @@ public class FracCalcCheckpoint2{
             runTests();
          }
          else{
-            String[] arrayNumbers = produceAnswer(expression);
-            System.out.println("Whole: " + arrayNumbers[0]);
-            System.out.println("Numerator: " + arrayNumbers[1]);
-            System.out.println("Denominator: " + arrayNumber[2]);
+            String[] arrayNumbers= produceAnswer(expression);
             System.out.print("Expression evaluated, ");
          }
          System.out.print("enter another expression: ");
@@ -39,7 +36,11 @@ public class FracCalcCheckpoint2{
       String[] firstArray = partsOfOperand(firstOperand);
       String[] secondArray = partsOfOperand(secondOperand);
       
-      return secondArray;      
+      System.out.print("whole:" + secondArray[0] + " ");
+      System.out.print("numerator:" + secondArray[1] + " ");
+      System.out.println("denominator:" + secondArray[2]); 
+      
+      return secondArray;
    }
    
    public static String findFirstOperand(String input){
@@ -57,11 +58,12 @@ public class FracCalcCheckpoint2{
    
    public static String[] partsOfOperand(String operand){
       String[] components = new String[3];
-      String whole = operand.substring(0, 1);
+      String whole = "";
       String numerator = "";
       String denominator = "";   
       if(operand.indexOf("_") != -1){
        int locUnderscore = operand.indexOf("_");
+       whole = operand.substring(0, locUnderscore);
        numerator = operand.substring(locUnderscore + 1, locUnderscore + 2);
        denominator = operand.substring(operand.indexOf("/") + 1, operand.length());
       }
@@ -83,10 +85,26 @@ public class FracCalcCheckpoint2{
    
    public static void runTests(){
       String[] inputs = {"10/4 + 3/2", "2 + 11", "1_3/4 * 4_5/6", "1/2 / -4/5", "1/0 - 2", "1 -- 4"};
-      String[][] expectedOutput = {"3/2", "11", "4_5/6", "-4/5", "2", "4"};
+      String[][] expectedOutput = {{"0", "3", "2"}, {"11", "0", "1"}, {"4", "5", "6"}, {"0", "-4", "5"}, {"2", "0", "1"}, {"4", "0", "1"}};
+      int count = 0;
+      String output = "";
+      String expectOutput = "";
+      String[] testArray = new String[3];
       for(int i = 0; i < inputs.length; i++){
-         String[] testArray = produceAnswer(inputs[i]);
-         
-      }    
+         testArray = produceAnswer(inputs[i]);
+         output = testArray[0] + " " + testArray[1] + " " + testArray[2];
+         expectOutput = expectedOutput[i][0] + " " + expectedOutput[i][1] + " " + expectedOutput[i][2];
+         if(expectOutput.equals(output)){
+            count++;
+            System.out.println("Test Passed :)");
+         }
+         else{
+            System.out.println("Test Failed :(");
+            System.out.println("Input: " + inputs[i]);
+            System.out.println("Expected: " + expectOutput);
+            System.out.println("Output: " + output);
+          }
+      }
+      System.out.print("Testing complete, " + count + "/6 Tests Passed, ");   
    }
 }
