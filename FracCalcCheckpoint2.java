@@ -1,25 +1,22 @@
-import java.util.Scanner;
 /* Sahil Gupta - AP CS A - 11/15/2019
    Frac Calc - Write a program to act
    as a calculator using everything from
    chapters 1 - 5 */
+import java.util.Scanner;
 public class FracCalcCheckpoint2{
    public static void main(String[] args){
       Scanner scan = new Scanner(System.in);
-      String condition = "y";
-      String expression = "";
-      String output = "";
       System.out.println("Welcome to Sahil's FracCalc!\nType \"quit\" anytime to exit.");
-      System.out.print("Enter an expression: ");
-      expression = scan.nextLine();
-
       
+      System.out.print("Enter an expression: ");
+      String expression = scan.nextLine();
+ 
       while(!expression.equalsIgnoreCase("quit")){         
          if(expression.equalsIgnoreCase("test")){
             runTests();
          }
          else{
-            String[] arrayNumbers= produceAnswer(expression);
+            String[] arrayNumbers= produceAnswer(expression, true);
             System.out.print("Expression evaluated, ");
          }
          System.out.print("enter another expression: ");
@@ -28,34 +25,20 @@ public class FracCalcCheckpoint2{
       System.out.print("Thank you for using Sahil's FracCalc! Have a good day!");
    }
    
-   public static String[] produceAnswer(String input){
-      String operator = input.substring(input.indexOf(" ") + 1, input.indexOf(" ") + 2);
-      String secondOperand = findSecondOperand(input);
-      String firstOperand = findFirstOperand(input);
+   public static String[] produceAnswer(String input, boolean togglePrint){
+      String[] inputArray = input.split(" ");      
+      String[] firstArray = partsOfOperand(inputArray[0]);
+      String[] secondArray = partsOfOperand(inputArray[2]);
       
-      String[] firstArray = partsOfOperand(firstOperand);
-      String[] secondArray = partsOfOperand(secondOperand);
-      
+      if(togglePrint == true){
       System.out.print("whole:" + secondArray[0] + " ");
       System.out.print("numerator:" + secondArray[1] + " ");
       System.out.println("denominator:" + secondArray[2]); 
+      }
       
       return secondArray;
    }
-   
-   public static String findFirstOperand(String input){
-      String firstOperand = input.substring(0, input.indexOf(" ") + 1);
-      return firstOperand;
-   }
-   
-   public static String findSecondOperand(String input){
-      String secondOperand = input.substring(input.indexOf(" ") + 3, input.length());
-      if(secondOperand.substring(0, 1).equals(" ")){
-         secondOperand = secondOperand.substring(1, 2);
-      }
-      return secondOperand;  
-   }
-   
+      
    public static String[] partsOfOperand(String operand){
       String[] components = new String[3];
       String whole = "";
@@ -84,14 +67,14 @@ public class FracCalcCheckpoint2{
    }
    
    public static void runTests(){
-      String[] inputs = {"10/4 + 3/2", "2 + 11", "1_3/4 * 4_5/6", "1/2 / -4/5", "1/0 - 2", "1 -- 4"};
-      String[][] expectedOutput = {{"0", "3", "2"}, {"11", "0", "1"}, {"4", "5", "6"}, {"0", "-4", "5"}, {"2", "0", "1"}, {"4", "0", "1"}};
+      String[] inputs = {"10/4 + 3/2", "2 + 11", "1_3/4 * -4_5/6", "1/2 / -4/5", "1/0 - 2", "1 -- 4"};
+      String[][] expectedOutput = {{"0", "3", "2"}, {"11", "0", "1"}, {"-4", "5", "6"}, {"0", "-4", "5"}, {"2", "0", "1"}, {"4", "0", "1"}};
       int count = 0;
       String output = "";
       String expectOutput = "";
       String[] testArray = new String[3];
       for(int i = 0; i < inputs.length; i++){
-         testArray = produceAnswer(inputs[i]);
+         testArray = produceAnswer(inputs[i], false);
          output = testArray[0] + " " + testArray[1] + " " + testArray[2];
          expectOutput = expectedOutput[i][0] + " " + expectedOutput[i][1] + " " + expectedOutput[i][2];
          if(expectOutput.equals(output)){
