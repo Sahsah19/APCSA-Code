@@ -1,4 +1,4 @@
-/* Sahil Gupta - AP CS A - 11/15/2019
+   /* Sahil Gupta - AP CS A - 11/15/2019
    Frac Calc - Write a program to act
    as a calculator using everything from
    chapters 1 - 5 */
@@ -16,74 +16,118 @@ public class FracCalcCheckpoint3{
             runTests();
          }
          else{
-            String[] arrayNumbers= produceAnswer(expression, true);
+            System.out.println(produceAnswer(expression));
             System.out.print("Expression evaluated, ");
          }
          System.out.print("enter another expression: ");
          expression = scan.nextLine();
       }
-      System.out.print("Thank you for using Sahil's FracCalc! Have a good day!");
+      System.out.print("Thank you for using Sahil's FracCalc! Goodbye!");
    }
    
-   public static String[] produceAnswer(String input, boolean togglePrint){
+   public static String produceAnswer(String input){
       String[] inputArray = input.split(" ");      
       String[] firstArray = partsOfOperand(inputArray[0]);
       String[] secondArray = partsOfOperand(inputArray[2]);
-      String[] condensedFirst = condenseOperand(
+      String output = "";
       
-      if(togglePrint == true){
-         System.out.print("whole:" + secondArray[0] + " ");
-         System.out.print("numerator:" + secondArray[1] + " ");
-         System.out.println("denominator:" + secondArray[2]); 
-      }
-      
-      return secondArray;
-   }
-   
-   public static int[] combineOperands(String[] firstOperand, String[] secondOperand, String operator){
-      int[] outputArray = new int[2];
-      if(operator.equals("+") || operator.equals("-")){
-         if(!firstOperand[1].equals(secondOperand[1])){
-            outputArray[1] = (Integer 
-         }
-      }
-   }
-   
-   public static int[] simplifyOperand(String[] operand){
-      while(operand[0] % operand[1] == 0){
-         operand[0] /= operand[1];
-         operand[1] /= operand[1];
-      }
-      while(operand[0] % 2 == 0 && operand[1] % 2 == 0){
-         operand[0] /= 2;
-         operand[1] /= 2;
-      }
-      while(operand[0] % 3 == 0 && operand[1] % 3 == 0){
-         operand[0] /= 3;
-         operand[1] /= 3;
-      }
-      else if(operand[0] % 5 == 0 && operand[1] % 5 == 0){
-         operand[0] /= 5;
-         operand[1] /= 5;
-      }
-      return operand;
-   }
-   
-   public static String[] condenseOperand(int[] operand){
-      String[] condensedOperand = new String[2];
-      if(operand[0] != 0 && operand[1] != 0){
-         condensedOperand[0] = "" + (Integer.parseInt(operand[0]) * Integer.parseInt(operand[2]) + Interger.parseInt(operand[1]));
-         condensedOperand[1] = operand[2];
-      }
-      else if(operand[1] == 0 && operand[2] == 1){
-         condensedOperand[0] = operand[0];
-         condensedOperand[1] = operand[2];
+      if (firstArray[2].equals("0") || secondArray[2].equals("0")){
+         output = "Error: Cannot Divide by 0 :(";
       }
       else{
-         condensedOperand[0] = operand[1];
-         condensedOperand[1] = operand[2];
-      } 
-      return condensedOperand;   
+         int[] condensedFirst = condenseOperand(firstArray);
+         int[] condensedSecond = condenseOperand(secondArray);
+         int[] combinedAnswer = combineOperands(condensedFirst, condensedSecond, inputArray[1]);
+      
+         
+         if (combinedAnswer[1] == 1){
+            output = "" + combinedAnswer[0];
+         }
+         else if (combinedAnswer[0] == -1 && combinedAnswer[1] == -1){
+            output = "Error: Invalid Operator :(";
+         }
+         else{
+            output = combinedAnswer[0] + "/" + combinedAnswer[1];
+         }
+      }
+      return output;
+   }
+   
+   public static int[] combineOperands(int[] firstOperand, int[] secondOperand, String operator){
+      int[] outputArray = new int[2];
+      if(operator.equals("+") || operator.equals("-")){
+         if(firstOperand[1] != (secondOperand[1])){
+            outputArray[1] = firstOperand[1] * secondOperand[1];
+            firstOperand[0] = firstOperand[0] * secondOperand[1];
+            secondOperand[0] = secondOperand[0] * firstOperand[1];
+         }
+         if(operator.equals("+")){
+               outputArray[0] = firstOperand[0] + secondOperand[0];
+               outputArray[1] = firstOperand[1];
+         }
+         else{
+            outputArray[0] = firstOperand[0] - secondOperand[0];
+            outputArray[1] = firstOperand[1];
+         } 
+      }
+      else if(operator.equals("*")){
+         outputArray[1] = firstOperand[1] * secondOperand[1];
+         outputArray[0] = firstOperand[0] * secondOperand[0];
+      }
+      else if(operator.equals("/")){
+         outputArray[1] = firstOperand[1] * secondOperand[0];
+         outputArray[0] = firstOperand[0] * secondOperand[1];
+      }
+      else{
+         outputArray[1] = -1;
+         outputArray[0] = -1; 
+      }
+      int[] finalArray = simplifyOperand(outputArray);
+      return outputArray;
+   }
+   
+   public static int[] simplifyOperand(int[] combined){
+      int boundary = 0;
+      int isNegative = 1;
+      if (combined[0] < 0 || combined[1] < 0){
+         if(combined[0] < 0 && combined[1] < 0){
+            isNegative = 1;
+         }
+         else{
+            isNegative = -1;
+         }
+      }
+      if (Math.abs(combined[0]) > Math.abs(combined [1])){
+         boundary = Math.abs(combined[1]);
+      }
+      else{
+         boundary = Math.abs(combined[0]);
+      }
+      for (int i = 1; i <= boundary; i++){
+         if(Math.abs(combined[0]) % i == 0 && Math.abs(combined[1]) % i == 0){
+            combined[0] = Math.abs(combined[0]) / i;
+            combined[1] = Math.abs(combined[1]) / i;
+         }
+      }
+      combined[0] *= isNegative;
+      return combined;
+   }
+   
+   public static int[] condenseOperand(String[] operand){
+      int[] condensedOperand = new int[2];
+      if(operand[0].equals("0") && !operand[1].equals("0")){
+         condensedOperand[0] = Integer.parseInt(operand[1]);
+         condensedOperand[1] = Integer.parseInt(operand[2]);
+      }
+      else if(operand[1].equals("0") && operand[2].equals("1")){
+         condensedOperand[0] = Integer.parseInt(operand[0]);
+         condensedOperand[1] = Integer.parseInt(operand[2]);
+      }
+      else{
+         condensedOperand[0] = (Integer.parseInt(operand[0]) * Integer.parseInt(operand[2]) + Integer.parseInt(operand[1]));
+         condensedOperand[1] = Integer.parseInt(operand[2]);
+      }
+      return simplifyOperand(condensedOperand);
    }
       
    public static String[] partsOfOperand(String operand){
@@ -114,27 +158,11 @@ public class FracCalcCheckpoint3{
    }
    
    public static void runTests(){
-      String[] inputs = {"10/4 + 3/2", "2 + 11", "1_3/4 * -4_5/6", "1/2 / -4/5", "1/0 - 2", "1 -- 4"};
-      String[][] expectedOutput = {{"0", "3", "2"}, {"11", "0", "1"}, {"-4", "5", "6"}, {"0", "-4", "5"}, {"2", "0", "1"}, {"4", "0", "1"}};
-      int count = 0;
-      String output = "";
-      String expectOutput = "";
-      String[] testArray = new String[3];
-      for(int i = 0; i < inputs.length; i++){
-         testArray = produceAnswer(inputs[i], false);
-         output = testArray[0] + " " + testArray[1] + " " + testArray[2];
-         expectOutput = expectedOutput[i][0] + " " + expectedOutput[i][1] + " " + expectedOutput[i][2];
-         if(expectOutput.equals(output)){
-            count++;
-            System.out.println("Test Passed :)");
-         }
-         else{
-            System.out.println("Test Failed :(");
-            System.out.println("Input: " + inputs[i]);
-            System.out.println("Expected: " + expectOutput);
-            System.out.println("Output: " + output);
-          }
-      }
-      System.out.print("Testing complete, " + count + "/6 Tests Passed, ");   
+      String[][] expectedInNOut = { {"10/4 + 3/2", "4"},
+                                    {"2 + 11", "13"},
+                                    {"1_3/4 * -4_5/6", ""},
+                                    {"1/2 / -4/5", "whole:0 numerator:-4 denominator:5"},
+                                    {"1/0 - 2", "whole:2 numerator:0 denominator:1"},
+                                    {"1 -- 4", "whole:4 numerator:0 denominator:1"} };
    }
 }
