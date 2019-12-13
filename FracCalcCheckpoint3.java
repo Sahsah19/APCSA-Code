@@ -38,16 +38,21 @@ public class FracCalcCheckpoint3{
          int[] condensedFirst = condenseOperand(firstArray);
          int[] condensedSecond = condenseOperand(secondArray);
          int[] combinedAnswer = combineOperands(condensedFirst, condensedSecond, inputArray[1]);
-      
          
-         if (combinedAnswer[1] == 1){
-            output = "" + combinedAnswer[0];
-         }
-         else if (combinedAnswer[0] == -1 && combinedAnswer[1] == -1){
+         if (combinedAnswer[0] == -1 && combinedAnswer[1] == -1){
             output = "Error: Invalid Operator :(";
          }
          else{
-            output = combinedAnswer[0] + "/" + combinedAnswer[1];
+            combinedAnswer = simplifyOperand(combinedAnswer);
+            if(combinedAnswer[1] == 1){
+               output = combinedAnswer[0] + "";
+            }
+            else if (combinedAnswer[0] == 0){
+               output = "0";
+            }
+            else{
+               output = combinedAnswer[0] + "/" + combinedAnswer[1];
+            }
          }
       }
       return output;
@@ -82,7 +87,6 @@ public class FracCalcCheckpoint3{
          outputArray[1] = -1;
          outputArray[0] = -1; 
       }
-      int[] finalArray = simplifyOperand(outputArray);
       return outputArray;
    }
    
@@ -124,8 +128,13 @@ public class FracCalcCheckpoint3{
          condensedOperand[1] = Integer.parseInt(operand[2]);
       }
       else{
-         condensedOperand[0] = (Integer.parseInt(operand[0]) * Integer.parseInt(operand[2]) + Integer.parseInt(operand[1]));
+         int negative = 1;
+         if(Integer.parseInt(operand[0]) < 0){
+            negative = -1;
+         }
+         condensedOperand[0] = (Math.abs(Integer.parseInt(operand[0])) * Math.abs(Integer.parseInt(operand[2]))) + Integer.parseInt(operand[1]);
          condensedOperand[1] = Integer.parseInt(operand[2]);
+         condensedOperand[0] *= negative;
       }
       return simplifyOperand(condensedOperand);
    }
@@ -138,7 +147,7 @@ public class FracCalcCheckpoint3{
       if(operand.indexOf("_") != -1){
          int locUnderscore = operand.indexOf("_");
          whole = operand.substring(0, locUnderscore);
-         numerator = operand.substring(locUnderscore + 1, locUnderscore + 2);
+         numerator = operand.substring(locUnderscore + 1, operand.indexOf("/"));
          denominator = operand.substring(operand.indexOf("/") + 1, operand.length());
       }
       else if(operand.indexOf("_") == -1 && operand.indexOf("/") == -1){
@@ -161,8 +170,18 @@ public class FracCalcCheckpoint3{
       String[][] expectedInNOut = { {"10/4 + 3/2", "4"},
                                     {"2 + 11", "13"},
                                     {"1_3/4 * -4_5/6", ""},
-                                    {"1/2 / -4/5", "whole:0 numerator:-4 denominator:5"},
-                                    {"1/0 - 2", "whole:2 numerator:0 denominator:1"},
-                                    {"1 -- 4", "whole:4 numerator:0 denominator:1"} };
+                                    {"1/2 / -4/5", "-5/8"},
+                                    {"1/0 - 2", "Error: Cannot Divide by 0 :("},
+                                    {"1 -- 4", "Error: Invalid Operator :("},
+                                    {"1/2 - 1/2", "0"},
+                                    {"1_5/3 * -12_15/28", "-468/14"}};
+//                                  {"
+//                                  {"
+//                                  {"
+//                                  {"
+//                                  {"
+//                                  {"
+//                                  {"
+//                                  {"
    }
 }
