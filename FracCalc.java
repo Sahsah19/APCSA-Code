@@ -59,7 +59,18 @@ public class FracCalc { //start of class
       }
       return output; //return the output
    }
-
+   
+   public static int[] intoMixed(int[] simplified){
+      int isNeg = 1;
+      if (simplified[0] < 0){
+         isNeg = -1;
+      }
+      int[] mixed = new int[3];
+      mixed[2] = simplified[1];
+      mixed[1]   
+   
+   }
+   
    public static int[] combineOperands(int[] firstOperand, int[] secondOperand, String operator) { //method combineOperands
       int[] outputArray = new int[2]; //outputArray of length of 2
       if (operator.equals("+") || operator.equals("-")) { //if the operator is "+" or "-"
@@ -95,6 +106,8 @@ public class FracCalc { //start of class
    public static int[] simplifyOperand(int[] combined) { //simplification method
       int boundary = 0; //simple declaration statements
       int isNegative = 1;
+      int absNum = Math.abs(combined[0]);
+      int absDenom = Math.abs(combined[1]);
       if (combined[0] < 0 || combined[1] < 0) { // if there is a negative number 
          if (combined[0] < 0 && combined[1] < 0) { //if there is a neg. num. in both sides
             isNegative = 1; //set to 1
@@ -103,16 +116,16 @@ public class FracCalc { //start of class
          }
       }
       //set boundary to the lowest num.
-      if (Math.abs(combined[0]) > Math.abs(combined[1])) { 
-         boundary = Math.abs(combined[1]);
+      if (absNum > absDenom) { 
+         boundary = absDenom;
       } else {
-         boundary = Math.abs(combined[0]);
+         boundary = absNum;
       }
       //for loop until the boundary is reached and simplified
       for (int i = 1; i <= boundary; i++) {
-         if (Math.abs(combined[0]) % i == 0 && Math.abs(combined[1]) % i == 0) {
-            combined[0] = Math.abs(combined[0]) / i;
-            combined[1] = Math.abs(combined[1]) / i;
+         if (absNum % i == 0 && absDenom % i == 0) {
+            combined[0] = absNum / i;
+            combined[1] = absDenom / i;
          }
       }
       combined[0] *= isNegative; //multiply if there is negative
@@ -172,25 +185,25 @@ public class FracCalc { //start of class
    public static void runTests() { //testing method
       //all the inputs and outputs
       String[][] expectedInNOut = { {"10/4 + 3/2", "4"},
-                             {"2 + 11", "13"},
-                             {"1_3/4 * -4_5/6", "-203/24"},
-                             {"1/2 / -4/5", "-5/8"},
-                             {"1/0 - 2", "Error: Cannot Divide by 0 :("},
-                             {"1 -- 4", "Error: Invalid Operator :("},
-                             {"1/2 - 1/2", "0"},
-                             {"1_5/3 * -12_15/28", "-468/14"},
-                             {"1 / 0", "Error: Cannot Divide by 0 :("},
-                             {"1/2 + -9_9/10", "-94/10"},
-                             {"-3_9/3 + -3_3/4", "-39/4"},
-                             {"1_5/3 - 4_1/5", "-23/15"},
-                             {"-9_1/6 - -8/3", "-39/6"},
-                             {"8/9 - -7_6/2", "98/9"},
-                             {"7/4 / 2", "7/8"},
-                             {"7_8/9 * 3_7/2", "923/18"},
-                             {"-1 - -1", "0"},
-                             {"0 / 1", "0"},
-                             {"0/1 + 1", "1"},
-                             {"0/1 ** 1", "Error: Invalid Operator :("} };
+                                    {"2 + 11", "13"},
+                                    {"1_3/4 * -4_5/6", "-203/24"},
+                                    {"1/2 / -4/5", "-5/8"},
+                                    {"1/0 - 2", "Error: Cannot Divide by 0 :("},
+                                    {"1 -- 4", "Error: Invalid Operator :("},
+                                    {"1/2 - 1/2", "0"},
+                                    {"1_5/3 * -12_15/28", "-234/7"},
+                                    {"1 / 0", "Error: Cannot Divide by 0 :("},
+                                    {"1/2 + -9_9/10", "-47/5"},
+                                    {"-3_9/3 + -3_3/4", "-39/4"},
+                                    {"1_5/3 - 4_1/5", "-23/15"},
+                                    {"-9_1/6 - -8/3", "-13/2"},
+                                    {"8/9 - -7_6/2", "98/9"},
+                                    {"7/4 / 2", "7/8"},
+                                    {"7_8/9 * 3_7/2", "923/18"},
+                                    {"-1 - -1", "0"},
+                                    {"0 / 1", "0"},
+                                    {"0/1 + 1", "1"},
+                                    {"0/1 ** 1", "Error: Invalid Operator :("} };
       int count = 0;
       String testAnswer = "";
       //run the array through produce answer to find any discrepancies
