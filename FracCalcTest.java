@@ -4,7 +4,7 @@ as a calculator using everything from
 chapters 1 - 5 */
 import java.util.Scanner;
 
-public class FracCalc { //start of class
+public class FracCalcTest { //start of class
    public static void main(String[] args) { //main method
       Scanner scan = new Scanner(System.in); //declaration of scanner
       System.out.println("Welcome to Sahil's FracCalc!\nType \"quit\" anytime to exit."); //welcome statement
@@ -26,9 +26,9 @@ public class FracCalc { //start of class
    }
 
    public static String produceAnswer(String input) { //start of method produceAnswer
-      String output = ""; //declare output as a empty string
-      if (input.indexOf(" ") == -1){
-         output = "Error: Invalid Input, You Have to at least Enter 2 Operands";
+      try{
+         if (input.indexOf(" ") == -1){
+            output = "Error: Invalid Input, You Have to at least Enter 2 Operands and an Operator";
       } else { 
          String[] inputArray = input.split(" "); //spilt the input into the operands and operators
          String[] firstArray = partsOfOperand(inputArray[0]); //send the first string into the method to find the parts
@@ -62,6 +62,18 @@ public class FracCalc { //start of class
          }
       }
       return output; //return the output
+      } catch(
+   }
+   public static String[][] separateInput(String[] input){
+      String cP = "";
+      int operatorCnt = 0, operandCnt = 0;
+      String separated[][] = new String[2][(input.length) - ((int) Math.floor((input.length) / 2))];
+      for(int i = 0; i < input.length; i++){
+         cP = input[i];
+         if (cP.equals("+") || cP.equals("-") || cP.equals("/") || cP.equals("*")){
+            separated[1][operatorCnt] = input[i];
+         }
+      }   
    }
    
    public static String intoMixed(int[] simplified){
