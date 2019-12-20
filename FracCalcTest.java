@@ -26,43 +26,15 @@ public class FracCalcTest { //start of class
    }
 
    public static String produceAnswer(String input) { //start of method produceAnswer
-      try{
-         if (input.indexOf(" ") == -1){
+      String output = "";
+       if (input.indexOf(" ") == -1){
             output = "Error: Invalid Input, You Have to at least Enter 2 Operands and an Operator";
       } else { 
-         String[] inputArray = input.split(" "); //spilt the input into the operands and operators
-         String[] firstArray = partsOfOperand(inputArray[0]); //send the first string into the method to find the parts
-         String[] secondArray = partsOfOperand(inputArray[2]); //send the second string into the method to find the parts
-
-         if (firstArray[2].equals("0") || secondArray[2].equals("0")) { //if the denominators equal 0 then return a error statement
-            output = "Error: Cannot Divide by 0 :("; //error statement
-         } else if (inputArray[1].equals("/") && secondArray[0].equals("0") && secondArray[1].equals("0")) { //if the numerator is 0, of the second 
-            output = "Error: Cannot Divide by 0 :("; //error statement
-         } else { //otherwise
-            int[] condensedFirst = condenseOperand(firstArray); //condense the first operand
-            int[] condensedSecond = condenseOperand(secondArray); //condense the second operand
-            int[] combinedAnswer = combineOperands(condensedFirst, condensedSecond, inputArray[1]); //combine the 2 answers together
-   
-            if (combinedAnswer[0] == -1 && combinedAnswer[1] == -1) { //if both numerator and denominator equal -1 then it is a invalid operand
-               output = "Error: Invalid Operator :("; //error statement
-            } else {
-               combinedAnswer = simplifyOperand(combinedAnswer); //simplify the combined answer
-               if(Math.abs(combinedAnswer[0]) > combinedAnswer[1] && combinedAnswer[1] != 1){
-                  output = intoMixed(combinedAnswer);
-               } else{
-                  if (combinedAnswer[1] == 1) { //if the denominator equals 1
-                     output = combinedAnswer[0] + ""; //set the output as a whole number
-                  } else if (combinedAnswer[0] == 0) { //if the numerator is equal to 0
-                  output = "0"; //output is 0
-                  } else { //otherwise
-                     output = combinedAnswer[0] + "/" + combinedAnswer[1]; //output as normal fraction
-                  }
-               }
-            }
-         }
-      }
+         String[][] separatedOp = separateInput(input.split(" "));
+         String[] operands = separatedOp[0];
+         String[] operators = separatedOp[1];
+      }   
       return output; //return the output
-      } catch(
    }
    public static String[][] separateInput(String[] input){
       String cP = "";
@@ -70,10 +42,19 @@ public class FracCalcTest { //start of class
       String separated[][] = new String[2][(input.length) - ((int) Math.floor((input.length) / 2))];
       for(int i = 0; i < input.length; i++){
          cP = input[i];
-         if (cP.equals("+") || cP.equals("-") || cP.equals("/") || cP.equals("*")){
-            separated[1][operatorCnt] = input[i];
+         if (cP.contains("+") || cP.contains("-") || cP.contains("/") || cP.contains("*")){
+            if (cP.equals("/") || cP.equals("-")){
+               separated[1][operatorCnt] = "Error: Invalid Operator :(";
+            } else {
+               separated[1][operatorCnt] = input[i];
+            }
+            operatorCnt++;
+         } else {
+            separated[0][operandCnt] = input[i];
+            operandCnt++;
          }
-      }   
+      }
+      return separated;   
    }
    
    public static String intoMixed(int[] simplified){
@@ -119,82 +100,79 @@ public class FracCalcTest { //start of class
       return outputArray; //return the output
    }
 
-   public static int[] simplifyOperand(int[] combined) { //simplification method
+   public static int[] simplifyOperand(int[][] combined) { //simplification method
       int boundary = 0; //simple declaration statements
       int isNegative = 1;
-      int absNum = Math.abs(combined[0]);
-      int absDenom = Math.abs(combined[1]);
-      if (combined[0] < 0 || combined[1] < 0) { // if there is a negative number 
-         if (combined[0] < 0 && combined[1] < 0) { //if there is a neg. num. in both sides
-            isNegative = 1; //set to 1
+      for(int i = 0; i < combined.length; i++){
+         int absNum = Math.abs(combined[i][0]);
+         int absDenom = Math.abs(combined[i][1]);
+         if (combined[i][0] < 0 || combined[i][1] < 0) { // if there is a negative number 
+            if (combined[i][0] < 0 && combined[i][1] < 0) { //if there is a neg. num. in both sides
+               isNegative = 1; //set to 1
+            } else {
+               isNegative = -1; //set to -1
+            }
+         }
+         //set boundary to the lowest num.
+         if (absNum > absDenom) { 
+            boundary = absDenom;
          } else {
-            isNegative = -1; //set to -1
+            boundary = absNum;
          }
-      }
-      //set boundary to the lowest num.
-      if (absNum > absDenom) { 
-         boundary = absDenom;
-      } else {
-         boundary = absNum;
-      }
-      //for loop until the boundary is reached and simplified
-      for (int i = 1; i <= boundary; i++) {
-         if (absNum % i == 0 && absDenom % i == 0) {
-            combined[0] = absNum / i;
-            combined[1] = absDenom / i;
+         //for loop until the boundary is reached and simplified
+         for (int i = 1; i <= boundary; i++) {
+            if (absNum % i == 0 && absDenom % i == 0) {
+               combined[i][0] = absNum / i;
+               combined[i][1] = absDenom / i;
+            }
          }
-      }
-      combined[0] *= isNegative; //multiply if there is negative
+         combined[i][0] *= isNegative; //multiply if there is negative
+      }   
       return combined; //return
    }
 
-   public static int[] condenseOperand(String[] operand) { //condense operand
-      int[] condensedOperand = new int[2]; //new array
-      //determining composition of the operand
-      if (operand[0].equals("0") && !operand[1].equals("0")) {
-         condensedOperand[0] = Integer.parseInt(operand[1]);
-         condensedOperand[1] = Integer.parseInt(operand[2]);
-      } else if (operand[1].equals("0") && operand[2].equals("1")) {
-         condensedOperand[0] = Integer.parseInt(operand[0]);
-         condensedOperand[1] = Integer.parseInt(operand[2]);
-      } else {
-         int negative = 1;
-         if (Integer.parseInt(operand[0]) < 0) {
-            negative = -1;
-         }
-         condensedOperand[0] = (Math.abs(Integer.parseInt(operand[0])) * Math.abs(Integer.parseInt(operand[2])))
-               + Integer.parseInt(operand[1]);
-         condensedOperand[1] = Integer.parseInt(operand[2]);
-         condensedOperand[0] *= negative;
+   public static int[] condenseOperand(String[][] operands) { //condense operand
+      int[][] condensedOperands = new int[operands.length][2]; //new array
+      for(int i = 0; i < operands.length; i++){
+         if (operands[i][0].equals("0") && !operands[i][1].equals("0")) {
+            condensedOperands[i][0] = Integer.parseInt(operands[i][1]);
+            condensedOperands[i][1] = Integer.parseInt(operands[i][2]);
+         } else if (operands[i][1].equals("0") && operands[i][2].equals("1")) {
+            condensedOperands[i][0] = Integer.parseInt(operands[i][0]);
+            condensedOperands[i][1] = Integer.parseInt(operands[i][2]);
+         } else {
+            int negative = 1;
+            if (Integer.parseInt(operand[i][0]) < 0) {
+               negative = -1;
+            }
+            condensedOperands[i][0] = (Math.abs(Integer.parseInt(operands[i][0])) * Math.abs(Integer.parseInt(operands[i][2])))
+               + Integer.parseInt(operands[i][1]);
+            condensedOperands[i][1] = Integer.parseInt(operands[i][2]);
+            condensedOperands[i][0] *= negative;
+         }   
       }
-      return simplifyOperand(condensedOperand); //return the operand
+      return simplifyOperand(condensedOperands); //return the operand
    }
 
-   public static String[] partsOfOperand(String operand) { //parts of operand method
-      String[] components = new String[3]; //new array with 3 strings
-      String whole = ""; //declaration methods
-      String numerator = "";
-      String denominator = "";
-      //if there is a underscore, mixed number
-      if (operand.indexOf("_") != -1) {
-         int locUnderscore = operand.indexOf("_");
-         whole = operand.substring(0, locUnderscore);
-         numerator = operand.substring(locUnderscore + 1, operand.indexOf("/"));
-         denominator = operand.substring(operand.indexOf("/") + 1, operand.length());
-         //otherwise whole number
-      } else if (operand.indexOf("_") == -1 && operand.indexOf("/") == -1) {
-         whole = operand;
-         numerator = "0";
-         denominator = "1";
-      } else { //otherwise improper fraction
-         whole = "0";
-         numerator = operand.substring(0, operand.indexOf("/"));
-         denominator = operand.substring(operand.indexOf("/") + 1, operand.length());
-      }
-      //set everything to correct index in array
-      components[0] = whole;
-      components[1] = numerator;
-      components[2] = denominator;
+   public static String[][] partsOfOperand(String[] separated) { //parts of operand method
+      String[][] components = new String[separated.length][3]; //new array with 3 strings
+      for(int i = 0; i < separated.length; i++){
+         if (separated[i].indexOf("_") != -1) {
+            int locUnderscore = separated[i].indexOf("_");
+            components[i][0] = separated[i].substring(0, locUnderscore);
+            components[i][1] = separated[i].substring(locUnderscore + 1, separated[i].indexOf("/"));
+            components[i][2] = separated[i].substring(separated[i].indexOf("/") + 1, separated[i].length());
+            //otherwise whole number
+         } else if (separated[i].indexOf("_") == -1 && separated[i].indexOf("/") == -1) {
+            components[i][0] = separated[i];
+            components[i][1] = "0";
+            components[i][2] = "1";
+         } else { //otherwise improper fraction
+            components[i][0] = "0";
+            components[i][1] = separated[i].substring(0, separated[i].indexOf("/"));
+            components[i][2] = separated[i].substring(separated[i].indexOf("/") + 1, separated[i].length());
+         }
+      }   
       return components;
    }
 
