@@ -3,7 +3,7 @@ public class Deck{
    private int[] referenceNumber;
    
    public Deck(){
-      this.deck = {"Ace of Spades",
+      String[] useless = {"Ace of Spades",
                    "Ace of Clubs",
                    "Ace of Hearts",
                    "Ace of Diamonds",
@@ -55,5 +55,23 @@ public class Deck{
                    "King of Clubs",
                    "King of Hearts",
                    "King of Diamonds"};  
+                   
+      this.deck = useless;
+      
+      for(int i = 0; i < 52; i++){
+         this.referenceNumber[i] = 1;
+      }
+   }
+   
+   public int[] giveReference(){
+      return this.referenceNumber;
+   }
+   
+   public String[] giveCard(){
+      return this.deck;
+   }
+   
+   public void updateReference(int index){
+      this.referenceNumber[index] = -1;
    }
 }
