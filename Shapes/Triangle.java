@@ -1,3 +1,3 @@
-public class Triangle implements Shape{
+public abstract class Triangle implements Shape{
 
 }
