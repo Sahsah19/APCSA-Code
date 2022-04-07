@@ -1,19 +1,17 @@
-public class Square implements Shape{
-   private double side;
+/*  Sahil Gupta
+    Stutler
+    APCSA
+    Shapes Lab - Use interfaces and OOP to create
+      programs to find the area and perimeter of certain shapes */
+
+public class Square extends Rectangle{ //square class declaration with extension to rectangle superclass
    
-   public Square(double side){
-      this.side = side;
+   public Square(double side, String name){ //constructor to bounce back of superclass
+      super(side, side, name);
    }
    
-   public double getPerimeter(){
-      return this.side * 4;
+   public String getInfo(){ //get info of square
+      return getName() + "  perimeter: " + getPerimeter() + "  area: " + getArea();
    }
-   
-   public double getArea(){
-      return this.side * this.side;
-   }
-   
-   public String getInfo(){
-      return "Square  perimeter: " + getPerimeter() + "  area: " + getArea();
-   }
+
 }
